@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="blake"><title>数据库知识点整理 · 山外小楼夜听雨</title><meta name="description" content="数据库概念巴拉巴拉的DMLDDL
+
+事务四个特性123事务（原子性，   一致性，       隔离性，   持久性）Atomicity   Consistency   Isolation   Durability
+
+
+一，排它锁和共享锁的兼容性
+
+
+
+
+排它锁(X) 共享锁(S)
+X
+S
+
+
+
+X"><meta name="keywords" content="有趣、IT"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title><a href="/">山外小楼夜听雨</a></h3><div class="description"><p>分享有趣、逗比的开心事，探讨严谨IT技术。</p></div></div></div><ul class="social-links"></ul><div class="footer"><a target="_blank" href="/"><span>Theme by</span></a><a href="https://www.caicai.me"> CaiCai</a><span>&</span><a href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/about">关于</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"></a></li></div><div class="avatar"><img></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>数据库知识点整理</a></h3></div><div class="post-content"><p><img src="mysql_logo.jpg" alt>  </p>
+<h4 id="数据库概念巴拉巴拉的"><a href="#数据库概念巴拉巴拉的" class="headerlink" title="数据库概念巴拉巴拉的"></a>数据库概念巴拉巴拉的</h4><p>DML<br>DDL</p>
+<hr>
+<h5 id="事务四个特性"><a href="#事务四个特性" class="headerlink" title="事务四个特性"></a>事务四个特性</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">事务</span><br><span class="line">（原子性，   一致性，       隔离性，   持久性）</span><br><span class="line">Atomicity   Consistency   Isolation   Durability</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>一，排它锁和共享锁的兼容性</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>排它锁(X) 共享锁(S)</th>
+<th>X</th>
+<th>S</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>X</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>S</td>
+<td>不兼容</td>
+<td>兼容</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>二，有哪些锁,select时怎么加排它锁</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>锁</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>乐观锁</td>
+<td>自己实现，通过版本号</td>
+</tr>
+<tr>
+<td>悲观锁</td>
+<td>共享锁，多个事务，只能读不能写，加 lock in share mode</td>
+</tr>
+<tr>
+<td>排它锁</td>
+<td>一个事务，只能写，for update</td>
+</tr>
+<tr>
+<td>行锁</td>
+<td>作用于数据行</td>
+</tr>
+<tr>
+<td>表锁</td>
+<td>作于用表</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>三，事务并发可能导致问题（脏读、不可重复读、幻读）</p>
+</blockquote>
+<ol>
+<li>脏读：B事务读取到了A事务尚未提交的数据</li>
+<li>不可重复读：一个事务中两次读取的数据的内容不一致</li>
+<li>幻读/虚读：一个事务中两次读取的数据的数量不一致</li>
+</ol>
+<blockquote>
+<p>四，数据库隔离级别</p>
+</blockquote>
+<ol>
+<li>read uncommitted : 读未提交  -哪个问题都不能解决</li>
+<li>read committed：   读已提交  -可以解决脏读 —- oracle默认的</li>
+<li>repeatable read：  可重复读  -可以解决脏读和不可重复读 —mysql默认的</li>
+<li>serializable：     串行化    -可以解决脏读不可重复读和虚读—相当于锁表</li>
+</ol>
+<p>详细说明：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">读未提交</span><br><span class="line">&gt;事务对当前被读取的数据不加锁；</span><br><span class="line">&gt;事务在更新某数据的瞬间，必须先对其加行级共享锁，直到事务结束才释放。</span><br><span class="line"></span><br><span class="line">读已提交</span><br><span class="line">&gt;事务对当前被读取的数据加 行级共享锁（当读到时才加锁），一旦读完该行，立即释放该行级共享锁；</span><br><span class="line">&gt;事务在更新某数据的瞬间（就是发生更新的瞬间），必须先对其加行级排他锁，直到事务结束才释放。</span><br><span class="line"></span><br><span class="line">可重复读</span><br><span class="line">&gt;事务在读取某数据的瞬间（就是开始读取的瞬间），必须先对其加 行级共享锁，直到事务结束才释放；</span><br><span class="line">&gt;事务在更新某数据的瞬间（就是发生更新的瞬间），必须先对其加 行级排他锁，直到事务结束才释放。</span><br><span class="line"></span><br><span class="line">串行化</span><br><span class="line">&gt;事务在读取数据时，必须先对其加`表级`共享锁 ，直到事务结束才释放；</span><br><span class="line">&gt;事务在更新数据时，必须先对其加`表级`排他锁 ，直到事务结束才释放。</span><br></pre></td></tr></table></figure>
+
+<p>———————————————假装我是分割线———————————————————–</p>
+<h5 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h5><p>MYISAM：不支持外键，表锁，插入数据时，锁定整个表，查表总行数时，不需要全表扫描<br>Innodb：支持外键，行锁，查表总行数时，全表扫描</p>
+<table>
+<thead>
+<tr>
+<th>索引类型</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通索引</td>
+<td>最基本的索引，没有任何限制</td>
+</tr>
+<tr>
+<td>唯一索引</td>
+<td>与”普通索引”类似，不同的就是：索引列的值必须唯一，但允许有空值。</td>
+</tr>
+<tr>
+<td>主键索引</td>
+<td>它是一种特殊的唯一索引，不允许有空值。</td>
+</tr>
+<tr>
+<td>全文索引</td>
+<td>针对较大的数据，生成全文索引很耗时好空间。</td>
+</tr>
+<tr>
+<td>组合索引</td>
+<td>为了更多的提高mysql效率可建立组合索引，遵循”<code>最左前缀</code>“原则</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>MySQL中explain的type类型</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ALL</td>
+<td>全表扫描</td>
+</tr>
+<tr>
+<td>index</td>
+<td>索引全扫描； extra=’Using index’时为索引覆盖</td>
+</tr>
+<tr>
+<td>range</td>
+<td>索引范围扫描，常用语&lt;,&lt;=,&gt;=,between等操作</td>
+</tr>
+<tr>
+<td>ref</td>
+<td>使用非唯一索引扫描或唯一索引前缀扫描，返回单条记录，常出现在关联查询中</td>
+</tr>
+<tr>
+<td>q_ref</td>
+<td>类似ref，区别在于使用的是唯一索引，使用主键的关联查询</td>
+</tr>
+<tr>
+<td>const/system</td>
+<td>单条记录，系统会把匹配行中的其他列作为常数处理，如主键或唯一索引查询，主键放置到where后面作为条件查询</td>
+</tr>
+<tr>
+<td>null</td>
+<td>MySQL不访问任何表或索引，直接返回结果</td>
+</tr>
+</tbody></table>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2019-05-30</span><i class="fa fa-tag"></i><a class="tag" href="/tags/数据库/" title="数据库">数据库 </a></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,http://yoursite.com/2019/05/30/数据库知识点整理/,山外小楼夜听雨,数据库知识点整理,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a class="btn" role="navigation" href="/2017/10/02/简单数据库实现/" title="简单数据库实现">Próximo post</a></li></ul></div></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script></body></html>
